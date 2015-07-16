@@ -7,7 +7,10 @@ A simple online note taking system that accomplishes two goals:
 
 ## Status
 
-This project is in-development, though it works.
+This project is in-development, though it works.A
+
+## Preview
+A working preview of this is available over [here](http://people.csail.mit.edu/marknotes/).
 
 ## How to use
 Just launch `index.html` in your browser, and begin typing in the text field. The markdown will automatically be previewed on the right hand side.
