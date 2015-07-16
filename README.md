@@ -24,3 +24,6 @@ External libraries that this project makes use of are included, together with th
 0. [jQuery](http://jquery.com)
 0. [Twitter Bootstrap](http://getbootstrap.com)
 0. [Bootstrap Material Design](https://fezvrasta.github.io/bootstrap-material-design/bootstrap-elements.html)
+
+And of course, thanks to the amazing [leaf corcoran (a.k.a. moonscript)](https://twitter.com/moonscript) 
+for developing the wonderful [itch.io](http://itch.io) that has allowed me to upload this someplace.
