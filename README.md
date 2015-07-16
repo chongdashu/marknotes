@@ -15,4 +15,12 @@ A working preview of this is available over [here](http://chongdashu.itch.io/mar
 ## How to use
 Just launch `index.html` in your browser, and begin typing in the text field. The markdown will automatically be previewed on the right hand side.
 
+## Credits and Thanks
+This would not be possible if not for the re(mark)able work of the following people/teams.
 
+External libraries that this project makes use of are included, together with their respective licenses. 
+
+0. [Phaser](http://www.phaser.io)
+0. [jQuery](http://jquery.com)
+0. [Twitter Bootstrap](http://getbootstrap.com)
+0. [Bootstrap Material Design](https://fezvrasta.github.io/bootstrap-material-design/bootstrap-elements.html)
