@@ -20,7 +20,7 @@ This would not be possible if not for the re(mark)able work of the following peo
 
 External libraries that this project makes use of are included, together with their respective licenses. 
 
-0. [Phaser](http://www.phaser.io)
+0. [Marked](https://github.com/chjj/marked)
 0. [jQuery](http://jquery.com)
 0. [Twitter Bootstrap](http://getbootstrap.com)
 0. [Bootstrap Material Design](https://fezvrasta.github.io/bootstrap-material-design/bootstrap-elements.html)
