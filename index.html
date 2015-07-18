@@ -5,6 +5,7 @@
 
     
     <script src="lib/jquery/js/jquery-2.1.3.min.js"></script>
+    <script src="lib/jquery-editable/js/jeditable.min.js"></script>
     <script src="lib/bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
     <script src="lib/marked/js/marked-0.3.3.min.js"></script>
     <script src="lib/bootstrap-material-design/js/material.min.js"></script>
@@ -18,14 +19,74 @@
     <script>
         $(document).ready(function() {
             refresh();
+
+            $("#button-load").click(function(e) {
+                load();
+            });
+
+            $("#button-save").click(function(e) {
+                save();
+            });
             
             $(".input-container textarea").keyup(function(e) {
-                
                 refresh();
-                
+            });
 
+            $(".title").editable(function(value, settings) {
+                console.log(value);
+                console.log(settings);
+
+                console.log(normalized_text(value));
+
+                return (value);
+            }, {
+                type    : "text",
+                submit  : "OK"
             });
         });
+
+        function normalized_text(text) {
+            return text.replace(/\s/g,"-");
+        }
+
+        function normalized_title() {
+            return $(".title").html();
+        }
+
+        function get_key() {
+            return window.location.pathname;        
+        }
+
+        function load() {
+            if (('localStorage' in window) && window.localStorage !== null) {
+
+            // easy object property API
+            var data = localStorage.getItem(get_key());
+          
+              if (data) {
+                data = JSON.parse(data);    
+                $(".input-container textarea").val(data[normalized_title()]);
+                refresh();
+              }
+            } 
+
+        }
+
+        function save() {
+            if (('localStorage' in window) && window.localStorage !== null) {
+
+              // easy object property API
+              data = {};
+
+              data[normalized_title()] = $(".input-container textarea").val();
+              localStorage.setItem(get_key(), JSON.stringify(data));
+
+              return data;
+
+            } else {
+            }
+
+        };
 
         function refresh() {
             var html = marked($(".input-container textarea").val());
@@ -40,8 +101,9 @@
     <div class="container">
         <div class="row">
             <div class="col-xs-6">
+                <div class="title editable" style="width: 100%;">Untitled</div>
                 <div class="input-container">
-                    <textarea style="width: 100%; height: 80%; margin-top: 10%;"># MarkNotes
+                    <textarea style="width: 100%; height: 80%;"># MarkNotes
  A simple tool to write markdown in your browser and have a live preview.
 
 ## Why?
@@ -57,7 +119,8 @@ Availabl on [GitHub](https://www.github.com/chongdashu/marknotes).
                 </div>
                 <div class="contols-container">
                     <div class="input-group">
-                        <button type="button" class="btn btn-primary">Edit</button>
+                        <button type="button" class="btn btn-primary" id="button-load">Load</button>
+                        <button type="button" class="btn btn-primary" id="button-save">Save</button>
                     </div>
                 </div>
             </div> <!-- end .col-md-6-->
