@@ -8,10 +8,11 @@
     <script src="lib/jquery-editable/js/jeditable.min.js"></script>
     <script src="lib/bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
     <script src="lib/marked/js/marked-0.3.3.min.js"></script>
+    <script src="lib/bootstrap-material-design/js/ripples.min.js"></script>
     <script src="lib/bootstrap-material-design/js/material.min.js"></script>
 
+
     <link rel="stylesheet" type="text/css" href="lib/bootstrap-3.3.5-dist/css/bootstrap.min.css"></link>
-    <link rel="stylesheet" type="text/css" href="lib/bootstrap-material-design/css/material.min.css"></link>
     <link rel="stylesheet" href="lib/bootstrap-material-design/css/roboto.min.css" rel="stylesheet">
     <link rel="stylesheet" href="lib/bootstrap-material-design/css/material.min.css" rel="stylesheet">
     <link rel="stylesheet" href="lib/bootstrap-material-design/css/ripples.min.css" rel="stylesheet">
@@ -24,6 +25,8 @@
 
             refresh();
             refreshFiles();
+
+            $("#button-delete").attr("disabled","disabled");
 
             defaultText = $(".input-container textarea").val();
 
@@ -52,14 +55,17 @@
 
             $("#button-save").click(function(e) {
                 save();
+                $("#button-save").attr("disabled","disabled");
             });
 
             $("#button-delete").click(function(e) {
                 do_delete();
+                $("#button-delete").attr("disabled","disabled");
             });
             
             $(".input-container textarea").keyup(function(e) {
                 refresh();
+                $("#button-save").removeAttr("disabled");
             });
 
             $(".title").editable(function(value, settings) {
@@ -128,6 +134,7 @@
             } 
 
             refresh();
+            $("#button-delete").removeAttr("disabled");
 
         }
         function clear() {
