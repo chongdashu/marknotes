@@ -27,6 +27,7 @@
             refreshFiles();
 
             $("#button-delete").attr("disabled","disabled");
+            $(".title-modified").hide();
 
             defaultText = $(".input-container textarea").val();
 
@@ -45,7 +46,9 @@
                     load(filename);    
                 }
 
-                 $(".title").html(filename);
+                $("#button-save").attr('disabled', 'disabled');
+                $(".title-modified").hide();
+                $(".title").html(filename);
                 
             });
 
@@ -56,6 +59,7 @@
             $("#button-save").click(function(e) {
                 save();
                 $("#button-save").attr("disabled","disabled");
+                $(".title-modified").hide();
             });
 
             $("#button-delete").click(function(e) {
@@ -66,6 +70,7 @@
             $(".input-container textarea").keyup(function(e) {
                 refresh();
                 $("#button-save").removeAttr("disabled");
+                $(".title-modified").show();
             });
 
             $(".title").editable(function(value, settings) {
@@ -256,7 +261,8 @@ Available on [GitHub](https://www.github.com/chongdashu/marknotes).
 
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="title editable" style="width: 100%; font-family: Monaca, Courier New;">Untitled</div>
+                            <span class="title-modified">*</span>
+                            <span class="title editable" style="display:inline-block; width: 80%; font-family: Monaca, Courier New;">Untitled</span>
                             
                             <div>
                                 <i>Click on the name above to rename the note.</i>
