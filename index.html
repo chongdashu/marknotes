@@ -27,16 +27,22 @@
 
             defaultText = $(".input-container textarea").val();
 
+
+
             $("#file-select").change(function(e) {
                 var filename = $("#file-select option:selected").attr("value");
                 console.log("filename=%s", filename);
                 if (filename === "<new>") {
                     filename = "Untitled";
+                    console.log("defaultText=%s", defaultText);
                     $(".input-container textarea").val(defaultText);
+                    refresh();
                 }
-                
-                    $(".title").html(filename);
+                else {
                     load(filename);    
+                }
+
+                 $(".title").html(filename);
                 
             });
 
@@ -191,7 +197,7 @@
               var entry = localStorage.getItem(get_key());
               if (entry) {
                 var data = JSON.parse(entry);
-                return Object.keys(data);
+                return Object.keys(data).sort();
               }
 
               return data;
@@ -223,7 +229,7 @@
                
             <div class="col-xs-6">
                 <div class="input-container">
-                    <textarea style="width: 100%; height: 80%; margin-top: 10%;"># MarkNotes
+                    <textarea style="width: 100%; height: 80%; margin-top: 10%; font-family: Monaco, Courier New; font-size: 9pt;" ># MarkNotes
  A simple tool to write markdown in your browser and have a live preview.
 
 ## Why?
