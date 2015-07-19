@@ -10,6 +10,8 @@
     <script src="lib/marked/js/marked-0.3.3.min.js"></script>
     <script src="lib/bootstrap-material-design/js/ripples.min.js"></script>
     <script src="lib/bootstrap-material-design/js/material.min.js"></script>
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/default.min.css">
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
 
 
     <link rel="stylesheet" type="text/css" href="lib/bootstrap-3.3.5-dist/css/bootstrap.min.css"></link>
@@ -223,10 +225,17 @@
             if (!val) {
                 val = $(".input-container textarea").val()
             }
+            // Synchronous highlighting with highlight.js
             var html = marked(val);
+
+
             $(".render-container").html(html); 
 
             $("table").addClass("table table-bordered table-condensed");
+
+            $('pre code').each(function(i, block) {
+               hljs.highlightBlock(block);
+             });
 
 
 
