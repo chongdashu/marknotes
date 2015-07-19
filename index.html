@@ -22,6 +22,7 @@
     <script>
 
         var defaultText = "";
+        var curretFilename = getBestFilename("Untitled");
 
         $(document).ready(function() {
 
@@ -31,20 +32,22 @@
             $("#button-delete").attr("disabled","disabled");
             $(".title-modified").hide();
 
+            $('.title').html(curretFilename);
+
             defaultText = $(".input-container textarea").val();
-
-
 
             $("#file-select").change(function(e) {
                 var filename = $("#file-select option:selected").attr("value");
                 console.log("filename=%s", filename);
+
                 if (filename === "<new>") {
-                    filename = "Untitled";
-                    console.log("defaultText=%s", defaultText);
+                    filename = getBestFilename("Untitled");
+                    // console.log("defaultText=%s", defaultText);
                     $(".input-container textarea").val(defaultText);
                     refresh();
                 }
                 else {
+                    curretFilename = filename
                     load(filename);    
                 }
 
@@ -83,12 +86,39 @@
                 // load(normalized_text(value));
                 // save(normalized_text(value));
 
-                return (value);
+                console.log("curretFilename=%s", curretFilename);
+                console.log("curretFilename=%s", curretFilename);
+
+                var filename = value;
+
+                if (value !== curretFilename) {
+                    filename = getBestFilename(filename);
+
+                    $("#button-save").removeAttr("disabled");
+                    $(".title-modified").show();
+
+                }
+
+                curretFilename = filename
+
+                console.log("hi, %s", filename);
+                return (filename);
             }, {
                 type    : "text",
                 submit  : "OK"
             });
         });
+
+        function getBestFilename(value) {
+            var filename = value;
+            var filenames = getFilenames();
+            var i = 1;
+
+            while (filenames.indexOf(filename) >= 0) {
+                filename = value + "-" + i;
+            }
+            return filename;
+        };
 
         function refreshFiles() {
             $("#file-select").find("option").remove();
