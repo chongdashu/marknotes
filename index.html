@@ -17,8 +17,28 @@
     <link rel="stylesheet" href="lib/bootstrap-material-design/css/ripples.min.css" rel="stylesheet">
 
     <script>
+
+        var defaultText = "";
+
         $(document).ready(function() {
+
             refresh();
+            refreshFiles();
+
+            defaultText = $(".input-container textarea").val();
+
+            $("#file-select").change(function(e) {
+                var filename = $("#file-select option:selected").attr("value");
+                console.log("filename=%s", filename);
+                if (filename === "<new>") {
+                    filename = "Untitled";
+                    $(".input-container textarea").val(defaultText);
+                }
+                
+                    $(".title").html(filename);
+                    load(filename);    
+                
+            });
 
             $("#button-load").click(function(e) {
                 load();
@@ -26,6 +46,10 @@
 
             $("#button-save").click(function(e) {
                 save();
+            });
+
+            $("#button-delete").click(function(e) {
+                do_delete();
             });
             
             $(".input-container textarea").keyup(function(e) {
@@ -35,8 +59,10 @@
             $(".title").editable(function(value, settings) {
                 console.log(value);
                 console.log(settings);
-
                 console.log(normalized_text(value));
+
+                // load(normalized_text(value));
+                // save(normalized_text(value));
 
                 return (value);
             }, {
@@ -44,6 +70,19 @@
                 submit  : "OK"
             });
         });
+
+        function refreshFiles() {
+            $("#file-select").find("option").remove();
+
+            $("#file-select").append($("<option></option>").html("Select a file...").attr("value", "<new>"));
+
+            var filenames = getFilenames();
+            console.log("refreshFiles()\n, filenames=%s", filenames);
+            $(filenames).each(function(index,filename) {
+                
+                $("#file-select").append($("<option></option>").html(filename).attr("value", filename));
+            });
+        };
 
         function normalized_text(text) {
             return text.replace(/\s/g,"-");
@@ -57,40 +96,120 @@
             return window.location.pathname;        
         }
 
-        function load() {
+        function load(title) {
+
             if (('localStorage' in window) && window.localStorage !== null) {
 
-            // easy object property API
-            var data = localStorage.getItem(get_key());
+                console.log("load(), title=%s", title);
+                key = get_key();
+
+                if (!title) {
+                    title = normalized_title();
+                }
+            
+
+                // easy object property API
+                var data = localStorage.getItem(key);
           
               if (data) {
                 data = JSON.parse(data);    
-                $(".input-container textarea").val(data[normalized_title()]);
-                refresh();
+                $(".input-container textarea").val(data[title]);
+                var val = data[normalized_title()];
+                console.log("val="+val);
+                refresh(val);
+                
               }
             } 
 
+            refresh();
+
+        }
+        function clear() {
+            console.log("key=%s", get_key());
+            localStorage.removeItem(get_key());
         }
 
-        function save() {
+        function save(title) {
             if (('localStorage' in window) && window.localStorage !== null) {
 
               // easy object property API
-              data = {};
+              var entry = localStorage.getItem(get_key());
+              var data = {};
+              if (entry) {
+                data = JSON.parse(entry);
+              }
 
-              data[normalized_title()] = $(".input-container textarea").val();
+              if (!title) {
+                title = normalized_title()
+              }
+
+              console.log("save()\ntitle=%s,data=%o", title, data);
+
+              data[title] = $(".input-container textarea").val();
               localStorage.setItem(get_key(), JSON.stringify(data));
+
+              refreshFiles();
 
               return data;
 
-            } else {
             }
 
         };
 
-        function refresh() {
-            var html = marked($(".input-container textarea").val());
+        function do_delete(title) {
+            if (('localStorage' in window) && window.localStorage !== null) {
+
+
+
+              var entry = localStorage.getItem(get_key());
+              var data = {};
+              if (entry) {
+                data = JSON.parse(entry);
+              }
+
+              if (!title) {
+                title = normalized_title()
+              }
+
+              console.log("delete()\ntitle=%s", title);
+
+              delete data[title];
+              localStorage.setItem(get_key(), JSON.stringify(data));
+
+              refreshFiles();
+
+
+            }
+
+        };
+
+        function getFilenames() {
+            if (('localStorage' in window) && window.localStorage !== null) {
+
+              // easy object property API
+
+              var entry = localStorage.getItem(get_key());
+              if (entry) {
+                var data = JSON.parse(entry);
+                return Object.keys(data);
+              }
+
+              return data;
+
+            }
+
+            return []
+        }
+
+        function refresh(val) {
+            if (!val) {
+                val = $(".input-container textarea").val()
+            }
+            var html = marked(val);
             $(".render-container").html(html); 
+
+
+
         };
     </script>
 
@@ -100,10 +219,11 @@
 <body>
     <div class="container">
         <div class="row">
+        
+               
             <div class="col-xs-6">
-                <div class="title editable" style="width: 100%;">Untitled</div>
                 <div class="input-container">
-                    <textarea style="width: 100%; height: 80%;"># MarkNotes
+                    <textarea style="width: 100%; height: 80%; margin-top: 10%;"># MarkNotes
  A simple tool to write markdown in your browser and have a live preview.
 
 ## Why?
@@ -118,10 +238,35 @@ Availabl on [GitHub](https://www.github.com/chongdashu/marknotes).
                     </textarea>
                 </div>
                 <div class="contols-container">
-                    <div class="input-group">
-                        <button type="button" class="btn btn-primary" id="button-load">Load</button>
-                        <button type="button" class="btn btn-primary" id="button-save">Save</button>
-                    </div>
+
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div style="float:left"><b>Name:</b></div>
+                            <div class="title editable" style="width: 50%;float:left">Untitled</div>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-small btn-primary" id="button-save">Save</button>
+                        </div>
+                        <div class="col-md-2">
+                            <!-- <button type="button" class="btn btn-primary" id="button-load">Load</button> -->
+                            <button type="button" class="btn btn-small btn-danger " id="button-delete">Delete</button>
+                        </div>
+                        <div class="col-md-1">
+
+                        </div>
+                        <div class="col-md-4">
+                            <select class="form-control" id="file-select" style="width:100%;">
+                            </select>
+                        </div>
+                    </div> <!-- end .row -->
+
+
+                        
+                        
+
+                        
+                        
+                    
                 </div>
             </div> <!-- end .col-md-6-->
             <div class="col-xs-6">
