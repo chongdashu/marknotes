@@ -29,6 +29,11 @@
             refresh();
             refreshFiles();
 
+            // save_data();
+            load_data();
+
+
+
             $("#button-delete").attr("disabled","disabled");
             $(".title-modified").hide();
 
@@ -113,6 +118,8 @@
             var filename = value;
             var filenames = getFilenames();
             var i = 1;
+
+            console.log("filenames=%s", filenames);
 
             while (filenames.indexOf(filename) >= 0) {
                 filename = value + "-" + i;
@@ -244,8 +251,6 @@
                 return Object.keys(data).sort();
               }
 
-              return data;
-
             }
 
             return []
@@ -267,9 +272,86 @@
                hljs.highlightBlock(block);
              });
 
+        };
 
+        post = function(url, data, successCallback, failCallback) {
+          $.ajax({
+              type: "POST",
+              url: url,
+              data: data
+            }).done(function( ret ) {
+               // console.log("[Success], post, done() ret=%o", ret);
+               successCallback(ret);
+            }).fail(function( ret) {
+                console.log("[Failure], post, fail() ret=%o", ret);
+            });
+        };
+
+        load_data = function() {
+            // url = "http://localhost/cgi-bin/archie/matrix-multiply.py",
+            url = get_server_base_url() + "load.py";
+            // url = "http://localhost/cgi-bin/airvatar-interactive/get_task.py",
+            this.post(url,
+            {
+                username: "default"
+            }, 
+            function(ret) {
+                    console.log("load_data(), done, ret=%o", ret);
+                    onDataLoaded(ret["data"]);
+            });
+        };
+
+        save_data = function() {
+            // url = "http://localhost/cgi-bin/archie/matrix-multiply.py",
+            url = get_server_base_url() + "save.py";
+            // url = "http://localhost/cgi-bin/airvatar-interactive/get_task.py",
+            this.post(url,
+            {
+                username: "default",
+                data: localStorage[get_key()]
+            }, 
+            function(ret) {
+                    console.log("save_data(), done, ret=%o", ret);
+                    onDataSaved();
+            });
+        };
+
+        onDataLoaded = function(data) {
+            var localData = {};
+            if (get_key() in localStorage) {
+                localData = JSON.parse(localStorage[get_key()]);
+            }
+            var remoteData = JSON.parse(data);
+
+            var localKeys = Object.keys(localData);
+            var remoteKeys = Object.keys(remoteData);
+
+            console.log("localKeys=%o", localKeys);
+            console.log("remoteKeys=%o", remoteKeys);
+
+            $(remoteKeys).each(function(index, key) {
+                if (localKeys.indexOf(key) < 0) {
+                    console.log("new server key: %s, %o", key, remoteData[key]);
+                    localData[key] = remoteData[key];
+                }
+            });
+
+            localStorage.setItem(get_key(), JSON.stringify(localData));
+
+            refreshFiles();
+
+
+
+            
+        };
+
+        onDataSaved = function() {
 
         };
+
+        get_server_base_url = function() {
+            return "http://localhost/cgi-bin/marknotes/";
+        }
     </script>
 
 
