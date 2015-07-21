@@ -26,20 +26,20 @@ def main():
 
     form = cgi.FieldStorage()
     username = form.getfirst("username", "")
-    data_json = json.loads(form.getfirst("data", ""))
+    # data_json = json.loads(form.getfirst("data", ""))
     data_txt = form.getfirst("data", "")
 
     folder = "save/%s/" % (username)
     txt_path = folder + "data.txt"
-    json_path = folder + "data.json"
+    # json_path = folder + "data.json"
     ensurePathForFolder(folder)
 
-    open(json_path, "w").write(json.dumps(data_json, indent=4))
-    open(txt_path, "w").write(data_txt, indent=4)
+    # open(json_path, "w").write(json.dumps(data_json, indent=4))
+    open(txt_path, "w").write(data_txt)
 
     ret = json.dumps({
         "status": "OK",
-        "json_path": json_path,
+        # "json_path": json_path,
         "txt_path": txt_path
     })
 
