@@ -287,6 +287,19 @@
             });
         };
 
+        publish = function() {
+            url = get_server_base_url() + "publish.py";
+            this.post(url,
+            {
+                html: $(".render-container").html(),
+                username: "default",
+                title: normalized_title()
+            }, 
+            function(ret) {
+                    console.log("publish(), done, ret=%o", ret);
+            });
+        }
+
         load_data = function() {
             // url = "http://localhost/cgi-bin/archie/matrix-multiply.py",
             url = get_server_base_url() + "load.py";

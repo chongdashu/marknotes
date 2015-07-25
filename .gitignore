@@ -1,3 +1,5 @@
 *.zip
 images
 cgi-bin
+cgi-bin-clone/save
+cgi-bin-clone/pages
